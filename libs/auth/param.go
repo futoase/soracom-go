@@ -6,11 +6,11 @@ import (
 )
 
 func (r *Request) SetParam(c *cli.Context) error {
-  if c.IsSet("email") {
+  if len(c.String("email")) != 0 {
     r.Email = c.String("email")
   }
 
-  if c.IsSet("password") {
+  if len(c.String("password")) != 0 {
     r.Password = c.String("password")
   }
 
@@ -20,6 +20,10 @@ func (r *Request) SetParam(c *cli.Context) error {
       return err
     }
     r.TokenTimeoutSeconds = i
+  }
+
+  if len(c.String("token")) != 0 {
+    r.Token = c.String("token")
   }
 
   return nil

@@ -25,12 +25,13 @@ func (r *Request) Auth() (*Response, string, error) {
     err = errors.New("Email or password is not valid.")
     return nil, "", err
   }
-  defer resp.Body.Close()
 
   body, err := ioutil.ReadAll(resp.Body)
   if err != nil {
     return nil, "", err
   }
+  defer resp.Body.Close()
+
   ar := Response{}
 
   err = json.Unmarshal(body, &ar)
