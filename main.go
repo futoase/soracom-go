@@ -1,7 +1,7 @@
 package main
 
 import (
-  command "github.com/futoase/soracom/libs/command"
+  command "github.com/futoase/soracom-go/libs/command"
 )
 
 func main () {

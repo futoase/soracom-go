@@ -1,7 +1,6 @@
 package auth
 
 import (
-  "strconv"
   "github.com/codegangsta/cli"
 )
 
@@ -15,15 +14,13 @@ func (r *Request) SetParam(c *cli.Context) error {
   }
 
   if c.IsSet("token-timeout-seconds") {
-    i, err := strconv.Atoi(c.String("token-timeout-seconds"))
-    if err != nil {
-      return err
-    }
-    r.TokenTimeoutSeconds = i
+    r.TokenTimeoutSeconds = c.Int("token-timeout-seconds")
+  } else {
+    r.TokenTimeoutSeconds = 86400
   }
 
   if len(c.String("token")) != 0 {
-    r.Token = c.String("token")
+    r.OneTimeToken = c.String("token")
   }
 
   return nil

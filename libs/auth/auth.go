@@ -1,12 +1,13 @@
 package auth
 
 import (
+  "fmt"
   "encoding/json"
   "net/http"
   "errors"
   "bytes"
   "io/ioutil"
-  config "github.com/futoase/soracom/libs/config"
+  config "github.com/futoase/soracom-go/libs/config"
 )
 
 func (r *Request) Auth() (*Response, string, error) {
@@ -14,6 +15,8 @@ func (r *Request) Auth() (*Response, string, error) {
   if err != nil {
     return nil, "", err
   }
+
+  fmt.Printf("%v+\n", r.TokenTimeoutSeconds)
 
   contentReader := bytes.NewReader(mJson)
   resp, err := http.Post(config.API_ENDPOINT + "/auth", "application/json", contentReader)
