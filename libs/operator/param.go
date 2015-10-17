@@ -26,5 +26,14 @@ func (r *Request) SetParam(c *cli.Context) error {
     r.TokenTimeoutSeconds = i
   }
 
+
+  if len(c.String("current-password")) != 0 {
+    r.CurrentPassword = c.String("current-password")
+  }
+
+  if len(c.String("new-password")) != 0 {
+    r.NewPassword = c.String("new-password")
+  }
+
   return nil
 }

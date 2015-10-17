@@ -119,6 +119,48 @@ func SetAction(a *cli.App) {
             return
           },
         },
+        {
+          Name: "password",
+          Usage: "Update password",
+          Flags: []cli.Flag{
+            cli.StringFlag{
+              Name: "api-key, a",
+              Value: "api-key",
+              Usage: "api key for SORACOM",
+              EnvVar: "SORACOM_API_KEY",
+            },
+            cli.StringFlag{
+              Name: "token, t",
+              Value: "token",
+              Usage: "token for SORACOM",
+              EnvVar: "SORACOM_TOKEN",
+            },
+            cli.StringFlag{
+              Name: "operator-id, i",
+              Value: "operator-id",
+              Usage: "Set operator id",
+            },
+            cli.StringFlag{
+              Name: "current-password, c",
+              Value: "current-password",
+              Usage: "current password for SORACOM",
+            },
+            cli.StringFlag{
+              Name: "new-password, n",
+              Value: "new-password",
+              Usage: "new password for SORACOM",
+            },
+          },
+          Action: func(c *cli.Context){
+            _, raw, err := operator.ExecPassword(c)
+            if err != nil {
+              log.Fatal(err)
+              return
+            }
+            println(string(raw))
+            return
+          },
+        },
       },
     },
   }

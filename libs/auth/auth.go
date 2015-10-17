@@ -1,7 +1,6 @@
 package auth
 
 import (
-  "fmt"
   "encoding/json"
   "net/http"
   "errors"
@@ -15,8 +14,6 @@ func (r *Request) Auth() (*Response, string, error) {
   if err != nil {
     return nil, "", err
   }
-
-  fmt.Printf("%v+\n", r.TokenTimeoutSeconds)
 
   contentReader := bytes.NewReader(mJson)
   resp, err := http.Post(config.API_ENDPOINT + "/auth", "application/json", contentReader)
