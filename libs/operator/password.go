@@ -1,7 +1,6 @@
 package operator
 
 import (
-  "fmt"
   "bytes"
   "encoding/json"
   "net/http"
