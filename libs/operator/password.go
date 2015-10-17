@@ -4,7 +4,6 @@ import (
   "bytes"
   "encoding/json"
   "net/http"
-  "net/http/httputil"
   "errors"
   "io/ioutil"
   config "github.com/futoase/soracom-go/libs/config"
