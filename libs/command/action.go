@@ -161,6 +161,38 @@ func SetAction(a *cli.App) {
             return
           },
         },
+        {
+          Name: "support_token",
+          Usage: "get of token for support",
+          Flags: []cli.Flag{
+            cli.StringFlag{
+              Name: "api-key, a",
+              Value: "api-key",
+              Usage: "api key for SORACOM",
+              EnvVar: "SORACOM_API_KEY",
+            },
+            cli.StringFlag{
+              Name: "token, t",
+              Value: "token",
+              Usage: "token for SORACOM",
+              EnvVar: "SORACOM_TOKEN",
+            },
+            cli.StringFlag{
+              Name: "operator-id, i",
+              Value: "operator-id",
+              Usage: "Set operator id",
+            },
+          },
+          Action: func(c *cli.Context){
+            _, raw, err := operator.ExecSupportToken(c)
+            if err != nil {
+              log.Fatal(err)
+              return
+            }
+            println(string(raw))
+            return
+          },
+        },
       },
     },
   }
