@@ -1,6 +1,6 @@
 # soracom-go
 
-Soracom client for Go
+[Soracom](https://dev.soracom.io/jp/) client for Go
 
 ## Install
 
