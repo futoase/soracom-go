@@ -6,6 +6,7 @@ type Response struct {
   Description string `json:"description"`
   Email string `json:"email"`
   RootOperatorId string `json:"rootOperatorId"`
+  OperatorId string `json:"operatorId"`
   apiToken string `json:"apiToken"`
   token string `json:"token"`
 }

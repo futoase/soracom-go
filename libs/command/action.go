@@ -193,6 +193,107 @@ func SetAction(a *cli.App) {
             return
           },
         },
+        {
+          Name: "invitation",
+          Usage: "invitation new user",
+          Flags: []cli.Flag{
+            cli.StringFlag{
+              Name: "api-key, a",
+              Value: "api-key",
+              Usage: "api key for SORACOM",
+              EnvVar: "SORACOM_API_KEY",
+            },
+            cli.StringFlag{
+              Name: "token, t",
+              Value: "token",
+              Usage: "token for SORACOM",
+              EnvVar: "SORACOM_TOKEN",
+            },
+            cli.StringFlag{
+              Name: "email, e",
+              Value: "email",
+              Usage: "email for invitaiton",
+            },
+            cli.StringFlag{
+              Name: "password, p",
+              Value: "password",
+              Usage: "password for invitation user",
+            },
+          },
+          Action: func(c *cli.Context){
+            _, raw, err := operator.ExecOperators(c)
+            if err != nil {
+              log.Fatal(err)
+              return
+            }
+            println(string(raw))
+            return
+          },
+        },
+        {
+          Name: "verify",
+          Usage: "verify of invitation user",
+          Flags: []cli.Flag{
+            cli.StringFlag{
+              Name: "api-key, a",
+              Value: "api-key",
+              Usage: "api key for SORACOM",
+              EnvVar: "SORACOM_API_KEY",
+            },
+            cli.StringFlag{
+              Name: "token, t",
+              Value: "token",
+              Usage: "token for SORACOM",
+              EnvVar: "SORACOM_TOKEN",
+            },
+            cli.StringFlag{
+              Name: "verify-token",
+              Value: "verify-token",
+              Usage: "verify token for intivation user",
+            },
+          },
+          Action: func(c *cli.Context) {
+            _, raw, err := operator.ExecVerify(c)
+            if err != nil {
+              log.Fatal(err)
+              return
+            }
+            println(string(raw))
+            return
+          },
+        },
+        {
+          Name: "info",
+          Usage: "get information of operator",
+          Flags: []cli.Flag{
+            cli.StringFlag{
+              Name: "api-key, a",
+              Value: "api-key",
+              Usage: "api key for SORACOM",
+              EnvVar: "SORACOM_API_KEY",
+            },
+            cli.StringFlag{
+              Name: "token, t",
+              Value: "token",
+              Usage: "token for SORACOM",
+              EnvVar: "SORACOM_TOKEN",
+            },
+            cli.StringFlag{
+              Name: "operator-id, i",
+              Value: "operator-id",
+              Usage: "Set operator id",
+            },
+          },
+          Action: func(c *cli.Context){
+            _, raw, err := operator.ExecOperatorInfo(c)
+            if err != nil {
+              log.Fatal(err)
+              return
+            }
+            println(string(raw))
+            return
+          },
+        },
       },
     },
   }
