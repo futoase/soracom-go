@@ -1,9 +1,9 @@
 package main
 
 import (
-  command "github.com/futoase/soracom-go/libs/command"
+	command "github.com/futoase/soracom-go/libs/command"
 )
 
-func main () {
-  command.Run()
+func main() {
+	command.Run()
 }

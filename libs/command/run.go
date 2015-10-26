@@ -1,11 +1,11 @@
 package command
 
 import (
-  "os"
+	"os"
 )
 
 func Run() {
-  app := InitializeApp()
-  SetAction(app)
-  app.Run(os.Args)
+	app := InitializeApp()
+	SetAction(app)
+	app.Run(os.Args)
 }
