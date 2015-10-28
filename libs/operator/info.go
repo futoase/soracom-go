@@ -3,25 +3,18 @@ package operator
 import (
 	"encoding/json"
 	"errors"
-	config "github.com/futoase/soracom-go/libs/config"
+	util "github.com/futoase/soracom-go/libs/util"
 	"io/ioutil"
 	"net/http"
 )
 
 func (r *Request) OperatorInfo() (*Response, string, error) {
-	client := &http.Client{}
+	client := util.HttpClient{}
+	client.Path = "/operators/" + string(r.OperatorId)
+	client.XSoracomApiKey = r.XSoracomApiKey
+	client.XSoracomToken = r.XSoracomToken
 
-	req, err := http.NewRequest("GET", config.API_ENDPOINT+"/operators/"+string(r.OperatorId), nil)
-	if err != nil {
-		return nil, "", err
-	}
-
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("X-Soracom-API-Key", r.XSoracomApiKey)
-	req.Header.Add("X-Soracom-Token", r.XSoracomToken)
-
-	resp, err := client.Do(req)
+	resp, err := client.Get()
 	if err != nil {
 		return nil, "", err
 	}

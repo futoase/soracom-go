@@ -1,10 +1,9 @@
 package auth
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	config "github.com/futoase/soracom-go/libs/config"
+	util "github.com/futoase/soracom-go/libs/util"
 	"io/ioutil"
 	"net/http"
 )
@@ -15,8 +14,11 @@ func (r *Request) Auth() (*Response, string, error) {
 		return nil, "", err
 	}
 
-	contentReader := bytes.NewReader(mJson)
-	resp, err := http.Post(config.API_ENDPOINT+"/auth", "application/json", contentReader)
+	client := util.HttpClient{}
+	client.Path = "/auth"
+	client.Body = mJson
+
+	resp, err := client.Post()
 	if err != nil {
 		return nil, "", err
 	}

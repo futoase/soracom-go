@@ -6,3 +6,7 @@ type Request struct {
 	TokenTimeoutSeconds int    `json:"tokenTimeoutSeconds"`
 	OneTimeToken        string `json:"token"`
 }
+
+type AuthRequest struct {
+	Email string `json:"email"`
+}

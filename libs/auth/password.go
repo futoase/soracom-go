@@ -4,14 +4,25 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	config "github.com/futoase/soracom-go/libs/config"
+	util "github.com/futoase/soracom-go/libs/util"
 	"io/ioutil"
 	"net/http"
 	"net/url"
 )
 
 func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
-	resp, err := http.PostForm(config.API_ENDPOINT+"/auth/password_reset_token/issue", url.Values{"email": {r.Email}})
+	ar := AuthRequest{r.Email}
+
+	mJson, err := json.Marshal(ar)
+	if err != nil {
+		return nil, "", err
+	}
+
+	client := util.HttpClient{}
+	client.Path = "/auth/password_reset_token/issue"
+	client.Body = mJson
+
+	resp, err := client.Post()
 	if err != nil {
 		return nil, "", err
 	}
