@@ -1,13 +1,11 @@
 package auth
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	util "github.com/futoase/soracom-go/libs/util"
 	"io/ioutil"
 	"net/http"
-	"net/url"
 )
 
 func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
@@ -46,8 +44,11 @@ func (r *Request) PassWordResetTokenTheVerify() (*Response, string, error) {
 		return nil, "", err
 	}
 
-	contentReader := bytes.NewReader(mJson)
-	resp, err := http.Post(config.API_ENDPOINT+"/auth/password_reset_token/verify", "application/json", contentReader)
+	client := util.HttpClient{}
+	client.Path = "/auth/password_reset_token/verify"
+	client.Body = mJson
+
+	resp, err := client.Post()
 	if err != nil {
 		return nil, "", err
 	}
