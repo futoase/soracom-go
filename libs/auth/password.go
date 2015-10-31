@@ -4,14 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	util "github.com/futoase/soracom-go/libs/util"
-	"io/ioutil"
 	"net/http"
 )
 
 func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
-	ar := AuthRequest{r.Email}
+	ir := IssueRequest{r.Email}
 
-	mJson, err := json.Marshal(ar)
+	mJson, err := json.Marshal(ir)
 	if err != nil {
 		return nil, "", err
 	}
@@ -24,7 +23,6 @@ func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
 	if err != nil {
 		return nil, "", err
 	}
-
 	if resp.StatusCode == http.StatusBadRequest {
 		err = errors.New("Email is not valid.")
 		return nil, "", err
@@ -39,7 +37,9 @@ func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
 }
 
 func (r *Request) PassWordResetTokenTheVerify() (*Response, string, error) {
-	mJson, err := json.Marshal(r)
+	vr := VerifyRequest{r.NewPassword, r.VerifyToken}
+
+	mJson, err := json.Marshal(vr)
 	if err != nil {
 		return nil, "", err
 	}
@@ -53,18 +53,17 @@ func (r *Request) PassWordResetTokenTheVerify() (*Response, string, error) {
 		return nil, "", err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
+		err = errors.New("Invalid token.")
 		return nil, "", err
-	}
-	defer resp.Body.Close()
-
-	ar := Response{}
-
-	err = json.Unmarshal(body, &ar)
-	if err != nil {
+	case http.StatusNotFound:
+		err = errors.New("Token timeout.")
 		return nil, "", err
+	case http.StatusOK:
+		return nil, "OK", nil
 	}
 
-	return &ar, string(body), nil
+	err = errors.New("Unknown Error.")
+	return nil, "", err
 }

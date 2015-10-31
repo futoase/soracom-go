@@ -42,17 +42,17 @@ func SetAction(a *cli.App) {
 		{
 			Name:  "password-reset",
 			Usage: "password reset",
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:   "email, e",
-					Value:  "email",
-					EnvVar: "SORACOM_EMAIL",
-				},
-			},
 			Subcommands: []cli.Command{
 				{
 					Name:  "issue",
 					Usage: "get token of password reset from email",
+          Flags: []cli.Flag{
+				    cli.StringFlag{
+				    	Name:   "email, e",
+				    	Value:  "email",
+				    	EnvVar: "SORACOM_EMAIL",
+				    },
+          },
 					Action: func(c *cli.Context) {
 						_, raw, err := auth.ExecPasswordResetTheIssue(c)
 						if err != nil {
@@ -66,6 +66,16 @@ func SetAction(a *cli.App) {
 				{
 					Name:  "verify",
 					Usage: "verify token of password reset",
+          Flags: []cli.Flag{
+				    cli.StringFlag{
+				    	Name: "new-password, p",
+				    	Value: "new-password",
+				    },
+            cli.StringFlag{
+              Name: "verify-token, t",
+              Value: "verify-token",
+            },
+          },
 					Action: func(c *cli.Context) {
 						_, raw, err := auth.ExecPasswordResetTheVerify(c)
 						if err != nil {
