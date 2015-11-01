@@ -8,7 +8,8 @@ import (
 )
 
 func (r *Request) OperatorVerify() (*Response, string, error) {
-	rv := RequestVerify{r.VerifyToken}
+	p := &r.Params
+	rv := RequestVerify{p.VerifyToken}
 
 	mJson, err := json.Marshal(rv)
 	if err != nil {
@@ -18,8 +19,8 @@ func (r *Request) OperatorVerify() (*Response, string, error) {
 	client := util.HttpClient{}
 	client.Path = "/operators/verify"
 	client.Body = mJson
-	client.XSoracomApiKey = r.XSoracomApiKey
-	client.XSoracomToken = r.XSoracomToken
+	client.XSoracomApiKey = p.XSoracomApiKey
+	client.XSoracomToken = p.XSoracomToken
 
 	resp, err := client.Post()
 	if err != nil {

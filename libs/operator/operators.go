@@ -8,7 +8,8 @@ import (
 )
 
 func (r *Request) Operators() (*Response, string, error) {
-	ro := RequestOperators{r.Email, r.Password}
+	p := &r.Params
+	ro := RequestOperators{p.Email, p.Password}
 
 	mJson, err := json.Marshal(ro)
 	if err != nil {
@@ -18,8 +19,8 @@ func (r *Request) Operators() (*Response, string, error) {
 	client := util.HttpClient{}
 	client.Path = "/operators"
 	client.Body = mJson
-	client.XSoracomApiKey = r.XSoracomApiKey
-	client.XSoracomToken = r.XSoracomToken
+	client.XSoracomApiKey = p.XSoracomApiKey
+	client.XSoracomToken = p.XSoracomToken
 
 	resp, err := client.Post()
 	if err != nil {

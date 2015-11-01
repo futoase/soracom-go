@@ -5,17 +5,30 @@ import (
 	"strconv"
 )
 
+type RequestParams struct {
+	XSoracomApiKey      string
+	XSoracomToken       string
+	OperatorId          string
+	TokenTimeoutSeconds int
+	CurrentPassword     string
+	NewPassword         string
+	Email               string
+	Password            string
+	VerifyToken         string
+}
+
 func (r *Request) SetParam(c *cli.Context) error {
+	p := &r.Params
 	if len(c.String("api-key")) != 0 {
-		r.XSoracomApiKey = c.String("api-key")
+		p.XSoracomApiKey = c.String("api-key")
 	}
 
 	if len(c.String("token")) != 0 {
-		r.XSoracomToken = c.String("token")
+		p.XSoracomToken = c.String("token")
 	}
 
 	if c.IsSet("operator-id") {
-		r.OperatorId = c.String("operator-id")
+		p.OperatorId = c.String("operator-id")
 	}
 
 	if c.IsSet("token-timeout-seconds") {
@@ -23,27 +36,27 @@ func (r *Request) SetParam(c *cli.Context) error {
 		if err != nil {
 			return err
 		}
-		r.TokenTimeoutSeconds = i
+		p.TokenTimeoutSeconds = i
 	}
 
 	if len(c.String("current-password")) != 0 {
-		r.CurrentPassword = c.String("current-password")
+		p.CurrentPassword = c.String("current-password")
 	}
 
 	if len(c.String("new-password")) != 0 {
-		r.NewPassword = c.String("new-password")
+		p.NewPassword = c.String("new-password")
 	}
 
 	if len(c.String("email")) != 0 {
-		r.Email = c.String("email")
+		p.Email = c.String("email")
 	}
 
 	if len(c.String("password")) != 0 {
-		r.Password = c.String("password")
+		p.Password = c.String("password")
 	}
 
 	if len(c.String("verify-token")) != 0 {
-		r.VerifyToken = c.String("verify-token")
+		p.VerifyToken = c.String("verify-token")
 	}
 
 	return nil
