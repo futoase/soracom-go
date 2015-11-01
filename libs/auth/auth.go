@@ -9,7 +9,8 @@ import (
 )
 
 func (r *Request) Auth() (*Response, string, error) {
-	ar := AuthRequest{r.Email, r.Password, r.TokenTimeoutSeconds}
+	p := &r.Params
+	ar := AuthRequest{p.Email, p.Password, p.TokenTimeoutSeconds}
 
 	mJson, err := json.Marshal(ar)
 	if err != nil {

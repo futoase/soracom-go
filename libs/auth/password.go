@@ -8,7 +8,8 @@ import (
 )
 
 func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
-	ir := IssueRequest{r.Email}
+	p := &r.Params
+	ir := IssueRequest{p.Email}
 
 	mJson, err := json.Marshal(ir)
 	if err != nil {
@@ -37,7 +38,8 @@ func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
 }
 
 func (r *Request) PassWordResetTokenTheVerify() (*Response, string, error) {
-	vr := VerifyRequest{r.NewPassword, r.VerifyToken}
+	p := &r.Params
+	vr := VerifyRequest{p.NewPassword, p.VerifyToken}
 
 	mJson, err := json.Marshal(vr)
 	if err != nil {

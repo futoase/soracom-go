@@ -4,31 +4,41 @@ import (
 	"github.com/codegangsta/cli"
 )
 
+type RequestParams struct {
+	Email               string
+	Password            string
+	TokenTimeoutSeconds int
+	OneTimeToken        string
+	VerifyToken         string
+	NewPassword         string
+}
+
 func (r *Request) SetParam(c *cli.Context) error {
+	p := &r.Params
 	if len(c.String("email")) != 0 {
-		r.Email = c.String("email")
+		p.Email = c.String("email")
 	}
 
 	if len(c.String("password")) != 0 {
-		r.Password = c.String("password")
+		p.Password = c.String("password")
 	}
 
 	if c.IsSet("token-timeout-seconds") {
-		r.TokenTimeoutSeconds = c.Int("token-timeout-seconds")
+		p.TokenTimeoutSeconds = c.Int("token-timeout-seconds")
 	} else {
-		r.TokenTimeoutSeconds = 86400
+		p.TokenTimeoutSeconds = 86400
 	}
 
 	if len(c.String("token")) != 0 {
-		r.OneTimeToken = c.String("token")
+		p.OneTimeToken = c.String("token")
 	}
 
 	if len(c.String("new-password")) != 0 {
-		r.NewPassword = c.String("new-password")
+		p.NewPassword = c.String("new-password")
 	}
 
 	if len(c.String("verify-token")) != 0 {
-		r.VerifyToken = c.String("verify-token")
+		p.VerifyToken = c.String("verify-token")
 	}
 
 	return nil

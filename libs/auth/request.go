@@ -1,12 +1,7 @@
 package auth
 
 type Request struct {
-	Email               string
-	Password            string
-	TokenTimeoutSeconds int
-	OneTimeToken        string
-	VerifyToken         string
-	NewPassword         string
+	Params RequestParams
 }
 
 type AuthRequest struct {
