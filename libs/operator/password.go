@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"errors"
 	util "github.com/futoase/soracom-go/libs/util"
-	"io/ioutil"
 	"net/http"
 )
 
@@ -27,23 +26,14 @@ func (r *Request) OperatorPassword() (*Response, string, error) {
 		return nil, "", err
 	}
 
-	if resp.StatusCode == http.StatusBadRequest {
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
 		err = errors.New("Invalid password")
 		return nil, "", err
+	case http.StatusOK:
+		return nil, "OK", err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, "", err
-	}
-	defer resp.Body.Close()
-
-	ar := Response{}
-
-	err = json.Unmarshal(body, &ar)
-	if err != nil {
-		return nil, "", err
-	}
-
-	return &ar, string(body), nil
+	err = errors.New("Unknown Error.")
+	return nil, "", err
 }
