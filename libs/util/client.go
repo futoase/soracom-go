@@ -13,17 +13,26 @@ type HttpClient struct {
 	XSoracomToken  string
 }
 
-func ReadBody(body []byte) *bytes.Reader {
-	if body != nil {
-		return bytes.NewReader(body)
-	} else {
-		return nil
-	}
+func (c *HttpClient) NewRequest(method string, path string, body []byte) (*http.Request, error) {
+  if body == nil {
+    req, err := http.NewRequest(method, path, nil)
+    if err != nil {
+      return nil, err
+    }
+    return req, nil
+  } else {
+    req, err := http.NewRequest(method, path, bytes.NewReader(body))
+    if err != nil {
+      return nil, err
+    }
+    return req, nil
+  }
 }
 
 func (c *HttpClient) Request(method string, path string, body []byte) (*http.Response, error) {
 	client := &http.Client{}
-	req, err := http.NewRequest(method, path, ReadBody(body))
+
+	req, err := c.NewRequest(method, path, body)
 	if err != nil {
 		return nil, err
 	}
