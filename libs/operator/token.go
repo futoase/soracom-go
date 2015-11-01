@@ -9,10 +9,11 @@ import (
 )
 
 func (r *Request) OperatorToken() (*Response, string, error) {
+	p := &r.Params
 	client := util.HttpClient{}
-	client.Path = "/operators/" + string(r.OperatorId) + "/token"
-	client.XSoracomApiKey = r.XSoracomApiKey
-	client.XSoracomToken = r.XSoracomToken
+	client.Path = "/operators/" + string(p.OperatorId) + "/token"
+	client.XSoracomApiKey = p.XSoracomApiKey
+	client.XSoracomToken = p.XSoracomToken
 
 	resp, err := client.Post()
 	if err != nil {

@@ -9,10 +9,11 @@ import (
 )
 
 func (r *Request) OperatorInfo() (*Response, string, error) {
+	p := &r.Params
 	client := util.HttpClient{}
-	client.Path = "/operators/" + string(r.OperatorId)
-	client.XSoracomApiKey = r.XSoracomApiKey
-	client.XSoracomToken = r.XSoracomToken
+	client.Path = "/operators/" + string(p.OperatorId)
+	client.XSoracomApiKey = p.XSoracomApiKey
+	client.XSoracomToken = p.XSoracomToken
 
 	resp, err := client.Get()
 	if err != nil {
