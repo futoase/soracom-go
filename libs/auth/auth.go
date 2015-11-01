@@ -1,22 +1,26 @@
 package auth
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	config "github.com/futoase/soracom-go/libs/config"
+	util "github.com/futoase/soracom-go/libs/util"
 	"io/ioutil"
 	"net/http"
 )
 
 func (r *Request) Auth() (*Response, string, error) {
-	mJson, err := json.Marshal(r)
+	ar := AuthRequest{r.Email, r.Password, r.TokenTimeoutSeconds}
+
+	mJson, err := json.Marshal(ar)
 	if err != nil {
 		return nil, "", err
 	}
 
-	contentReader := bytes.NewReader(mJson)
-	resp, err := http.Post(config.API_ENDPOINT+"/auth", "application/json", contentReader)
+	client := util.HttpClient{}
+	client.Path = "/auth"
+	client.Body = mJson
+
+	resp, err := client.Post()
 	if err != nil {
 		return nil, "", err
 	}
@@ -32,12 +36,12 @@ func (r *Request) Auth() (*Response, string, error) {
 	}
 	defer resp.Body.Close()
 
-	ar := Response{}
+	aResp := Response{}
 
-	err = json.Unmarshal(body, &ar)
+	err = json.Unmarshal(body, &aResp)
 	if err != nil {
 		return nil, "", err
 	}
 
-	return &ar, string(body), nil
+	return &aResp, string(body), nil
 }

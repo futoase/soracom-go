@@ -1,21 +1,28 @@
 package auth
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	config "github.com/futoase/soracom-go/libs/config"
-	"io/ioutil"
+	util "github.com/futoase/soracom-go/libs/util"
 	"net/http"
-	"net/url"
 )
 
 func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
-	resp, err := http.PostForm(config.API_ENDPOINT+"/auth/password_reset_token/issue", url.Values{"email": {r.Email}})
+	ir := IssueRequest{r.Email}
+
+	mJson, err := json.Marshal(ir)
 	if err != nil {
 		return nil, "", err
 	}
 
+	client := util.HttpClient{}
+	client.Path = "/auth/password_reset_token/issue"
+	client.Body = mJson
+
+	resp, err := client.Post()
+	if err != nil {
+		return nil, "", err
+	}
 	if resp.StatusCode == http.StatusBadRequest {
 		err = errors.New("Email is not valid.")
 		return nil, "", err
@@ -30,29 +37,33 @@ func (r *Request) PassWordResetTokenTheIssue() (*Response, string, error) {
 }
 
 func (r *Request) PassWordResetTokenTheVerify() (*Response, string, error) {
-	mJson, err := json.Marshal(r)
+	vr := VerifyRequest{r.NewPassword, r.VerifyToken}
+
+	mJson, err := json.Marshal(vr)
 	if err != nil {
 		return nil, "", err
 	}
 
-	contentReader := bytes.NewReader(mJson)
-	resp, err := http.Post(config.API_ENDPOINT+"/auth/password_reset_token/verify", "application/json", contentReader)
+	client := util.HttpClient{}
+	client.Path = "/auth/password_reset_token/verify"
+	client.Body = mJson
+
+	resp, err := client.Post()
 	if err != nil {
 		return nil, "", err
 	}
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
+	switch resp.StatusCode {
+	case http.StatusBadRequest:
+		err = errors.New("Invalid token.")
 		return nil, "", err
-	}
-	defer resp.Body.Close()
-
-	ar := Response{}
-
-	err = json.Unmarshal(body, &ar)
-	if err != nil {
+	case http.StatusNotFound:
+		err = errors.New("Token timeout.")
 		return nil, "", err
+	case http.StatusOK:
+		return nil, "OK", nil
 	}
 
-	return &ar, string(body), nil
+	err = errors.New("Unknown Error.")
+	return nil, "", err
 }

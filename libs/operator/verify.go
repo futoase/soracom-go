@@ -1,41 +1,27 @@
 package operator
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	config "github.com/futoase/soracom-go/libs/config"
+	util "github.com/futoase/soracom-go/libs/util"
 	"net/http"
-	"net/http/httputil"
 )
 
 func (r *Request) OperatorVerify() (*Response, string, error) {
-	client := &http.Client{}
-
 	rv := RequestVerify{r.VerifyToken}
 
-	reqBody, err := json.Marshal(rv)
+	mJson, err := json.Marshal(rv)
 	if err != nil {
 		return nil, "", err
 	}
 
-	req, err := http.NewRequest("POST", config.API_ENDPOINT+"/operators/verify", bytes.NewReader(reqBody))
-	if err != nil {
-		return nil, "", err
-	}
+	client := util.HttpClient{}
+	client.Path = "/operators/verify"
+	client.Body = mJson
+	client.XSoracomApiKey = r.XSoracomApiKey
+	client.XSoracomToken = r.XSoracomToken
 
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("X-Soracom-API-Key", r.XSoracomApiKey)
-	req.Header.Add("X-Soracom-Token", r.XSoracomToken)
-
-	body, err := httputil.DumpRequest(req, true)
-	if err != nil {
-		println(err)
-	}
-	println(string(body))
-
-	resp, err := client.Do(req)
+	resp, err := client.Post()
 	if err != nil {
 		return nil, "", err
 	}

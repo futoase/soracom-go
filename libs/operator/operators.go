@@ -1,41 +1,27 @@
 package operator
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
-	config "github.com/futoase/soracom-go/libs/config"
+	util "github.com/futoase/soracom-go/libs/util"
 	"net/http"
-	"net/http/httputil"
 )
 
 func (r *Request) Operators() (*Response, string, error) {
-	client := &http.Client{}
-
 	ro := RequestOperators{r.Email, r.Password}
 
-	reqBody, err := json.Marshal(ro)
+	mJson, err := json.Marshal(ro)
 	if err != nil {
 		return nil, "", err
 	}
 
-	req, err := http.NewRequest("POST", config.API_ENDPOINT+"/operators", bytes.NewReader(reqBody))
-	if err != nil {
-		return nil, "", err
-	}
+	client := util.HttpClient{}
+	client.Path = "/operators"
+	client.Body = mJson
+	client.XSoracomApiKey = r.XSoracomApiKey
+	client.XSoracomToken = r.XSoracomToken
 
-	req.Header.Add("Content-Type", "application/json")
-	req.Header.Add("Accept", "application/json")
-	req.Header.Add("X-Soracom-API-Key", r.XSoracomApiKey)
-	req.Header.Add("X-Soracom-Token", r.XSoracomToken)
-
-	requestByte, err := httputil.DumpRequestOut(req, true)
-	if err != nil {
-		println(err)
-	}
-	println(string(requestByte))
-
-	resp, err := client.Do(req)
+	resp, err := client.Post()
 	if err != nil {
 		return nil, "", err
 	}

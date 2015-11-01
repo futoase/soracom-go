@@ -23,5 +23,13 @@ func (r *Request) SetParam(c *cli.Context) error {
 		r.OneTimeToken = c.String("token")
 	}
 
+	if len(c.String("new-password")) != 0 {
+		r.NewPassword = c.String("new-password")
+	}
+
+	if len(c.String("verify-token")) != 0 {
+		r.VerifyToken = c.String("verify-token")
+	}
+
 	return nil
 }
