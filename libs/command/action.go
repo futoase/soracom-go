@@ -4,6 +4,7 @@ import (
 	"github.com/codegangsta/cli"
 	auth "github.com/futoase/soracom-go/libs/auth"
 	operator "github.com/futoase/soracom-go/libs/operator"
+	stats "github.com/futoase/soracom-go/libs/stats"
 	"log"
 )
 
@@ -46,13 +47,13 @@ func SetAction(a *cli.App) {
 				{
 					Name:  "issue",
 					Usage: "get token of password reset from email",
-          Flags: []cli.Flag{
-				    cli.StringFlag{
-				    	Name:   "email, e",
-				    	Value:  "email",
-				    	EnvVar: "SORACOM_EMAIL",
-				    },
-          },
+					Flags: []cli.Flag{
+						cli.StringFlag{
+							Name:   "email, e",
+							Value:  "email",
+							EnvVar: "SORACOM_EMAIL",
+						},
+					},
 					Action: func(c *cli.Context) {
 						_, raw, err := auth.ExecPasswordResetTheIssue(c)
 						if err != nil {
@@ -66,16 +67,16 @@ func SetAction(a *cli.App) {
 				{
 					Name:  "verify",
 					Usage: "verify token of password reset",
-          Flags: []cli.Flag{
-				    cli.StringFlag{
-				    	Name: "new-password, p",
-				    	Value: "new-password",
-				    },
-            cli.StringFlag{
-              Name: "verify-token, t",
-              Value: "verify-token",
-            },
-          },
+					Flags: []cli.Flag{
+						cli.StringFlag{
+							Name:  "new-password, p",
+							Value: "new-password",
+						},
+						cli.StringFlag{
+							Name:  "verify-token, t",
+							Value: "verify-token",
+						},
+					},
 					Action: func(c *cli.Context) {
 						_, raw, err := auth.ExecPasswordResetTheVerify(c)
 						if err != nil {
@@ -298,6 +299,54 @@ func SetAction(a *cli.App) {
 						_, raw, err := operator.ExecOperatorInfo(c)
 						if err != nil {
 							log.Fatal(err)
+							return
+						}
+						println(string(raw))
+						return
+					},
+				},
+			},
+		},
+		{
+			Name:  "stats",
+			Usage: "stats",
+			Subcommands: []cli.Command{
+				{
+					Name:  "subscriber",
+					Usage: "Get information for subscriber",
+					Flags: []cli.Flag{
+						cli.StringFlag{
+							Name:   "api-key, a",
+							Value:  "api-key",
+							Usage:  "api key for SORACOM",
+							EnvVar: "SORACOM_API_KEY",
+						},
+						cli.StringFlag{
+							Name:   "token, t",
+							Value:  "token",
+							Usage:  "token for SORACOM",
+							EnvVar: "SORACOM_TOKEN",
+						},
+						cli.StringFlag{
+							Name:  "imsi",
+							Usage: "imsi",
+						},
+						cli.StringFlag{
+							Name:  "from",
+							Usage: "from",
+						},
+						cli.StringFlag{
+							Name:  "to",
+							Usage: "to",
+						},
+						cli.StringFlag{
+							Name:  "period",
+							Usage: "period",
+						},
+					},
+					Action: func(c *cli.Context) {
+						_, raw, err := stats.ExecSubScriberStatus(c)
+						if err != nil {
 							return
 						}
 						println(string(raw))
